@@ -12,9 +12,7 @@ Left button controls CC bank - CC#s start at 16 for bank 1, 32 for bank 2, 48 fo
 Bank number is shown by LED color, Red=bank 1, Orange=bank 2, Yellow=bank 3, Green=bank 4
 
 Right button sets MIDI channel which defaults to channel 1
-
 Press button to see flashing channel number in binary (Red is bit 0)
-
 If right button pressed again while flashing it increments the MIDI channel number.
 
 The filter I implemented on the A/D works great - virtually zero spurious CCs are sent - only sends new values when you move the knobs.
@@ -30,9 +28,9 @@ History:
 
 10/25/22 - added LFO code from my eurorack module - implements 4 lfos on a 5th page, LEDs flash with the LFOs
 
-4 rows of pots control 4 lfos: <rise rate> <fall rate> <waveform> <max CC value>
+4 rows of pots control 4 lfos: rise rate, fall rate, waveform, max CC value
 
-If right button is pressed to "shift", rightmost pot sets <min CC value>
+If right button is pressed to "shift", rightmost pot sets minimum CC value
 
 3 waveforms: pot full left= ramp, pot in middle=pulse, pot full right=random
 
