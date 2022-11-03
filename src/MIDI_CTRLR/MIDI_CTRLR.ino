@@ -1,4 +1,5 @@
 /*
+ * MIDI controller based on
  * MIDIUSB_loop.ino
  *
  * Created: 4/6/2015 10:47:08 AM
@@ -60,10 +61,6 @@ int mode;      // CC message mode or LFO mode
 
 #define MIN_POT_CHANGE 25 // pot reading must change by this in order to register
 #define POT_AVERAGING 5 //average to use in LFO page 
-// maximum/minimum increments for the DDS which set the fastest/slowest LFO rates
-//#define MAX_DELTA 2047 // max DDS ramp increment 
-//#define RANGE 162  // 1024/log(MAX_DELTA) 8khz sampling
-//#define RANGE 142  // 1024/log(MAX_DELTA) for 1khz sampling. gives max LFO rate about 30hz
 #define RANGE 155  // 1024/log(MAX_DELTA) for 1khz sampling. gives max LFO rate about 3hz. don't want to go too fast or you will overload the midi channel
 #define MIN_DELTA 1000 // minimum value for DDS adder - avoids rediculously slow ramps
 
@@ -77,20 +74,18 @@ struct lfodata {
   byte wave; // waveform
   long rate1; // rate for first section of waveform
   long rate2; // rate for second section of waveform
-//  uint16_t amplitude;
   uint8_t maximum; // max CC value
   uint8_t minimum; // min CC value
   long acc; // bottom 20 are accumulator for DDS algorithm, top 12 used for waveform generation
   bool phase; // flags first or second section of waveform
   unsigned int dacout; // current DAC output value
-//  unsigned int scaledout; // scaled output 0-1023
   unsigned int lastCC; // last CC value sent
   } lfo[4];
 
 // waveform generator lifted from my 4lfo eurorack module
 // basic waveform is a ramp - up ramp time set by one pot, down ramp time by the second
 // ramp implemented with DDS algorithm. 24 bit accumulator - top 12 bits are the ramp and low 16 are the fractional increment
-// other waveforms are derived from the ramp values (0-4097)
+// other waveforms are derived from the ramp values 0-4097  - code originally written for a 12 bit DAC
 
 void lfo_generate() {
 
@@ -127,12 +122,7 @@ void lfo_generate() {
         if (phasechange) lfo[i].dacout=random(4096);
         break;
      }
-
-  // scale the output
-//    long scaledout=((long)lfo[i].dacout*(long)lfo[i].amplitude)/1024; // use long int math here or it will overflow
-//    lfo[i].scaledout=(unsigned) scaledout; // save it for LED display
   }
-
 } 
 
   // midi related stuff
@@ -229,15 +219,10 @@ void setup() {
 
   for (int i=0; i<4;++i) {
     lfo[i].wave=RAMP;
-//    EEPROM.get(eeAddress++, lfo[i].wave); // byte variable
     lfo[i].rate1=1000000;  // initial LFO rates
     lfo[i].rate2=1000000;
-//    lfo[i].amplitude=1023;
     lfo[i].minimum=0;
     lfo[i].maximum=0; // all lfos off
-//    EEPROM.get(eeAddress, lfo[i].amplitude);
-//    lfo[i].amplitude&=0x3ff; // in case there are bad values in eeprom
-//    eeAddress+=2;  // int variable
   }
 
   for (int i=0; i<NPOTS;++i) sample_pot(i); // initialize pot settings
