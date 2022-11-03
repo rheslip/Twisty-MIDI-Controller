@@ -8,7 +8,7 @@
  */
 
 // R Heslip Oct 2022 - modded the example code into a simple CC controller
-// CC values are read from 16 pots connected to the Arduino Pro Mini via a CD4067 sixteen channel analog mux
+// CC values are read from 16 pots connected to the Arduino Pro Micro via a CD4067 sixteen channel analog mux
 // left button controls cc page - cc#s start at 16 for page 1, 32 for page 2, 48 for page 3, 64 for page 4
 // page number is shown by LED color, Red=page 1, Orange=Page 2, Yellow=Page 3, Green=page 4
 // right button sets MIDI channel which defaults to channel 1
